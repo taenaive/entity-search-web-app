@@ -1,0 +1,18 @@
+:host {
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+}
+
+sz-powered-by {
+  font-size: 14px;
+  right: 0;
+  position: absolute;
+  margin: 2px 24px 2px 4px;
+  padding: 0 4px 0 0;
+  cursor: pointer;
+}
+
+mat-toolbar, .mat-toolbar {
+  height: 60px;
+}

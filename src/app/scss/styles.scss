@@ -1,0 +1,104 @@
+@import "~@angular/cdk/overlay-prebuilt.css";
+
+/* You can add global styles to this file, and also import other style files */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.error-404 {
+  background-color: #f3ecca;
+}
+.error-500 {
+  background-color: #f3d6bf;
+}
+.error-504 {
+  background-color: #de004830;
+  background-color: rgba(222, 0, 72, 0.1);
+}
+.error-uknown {
+  background-color: #e9caf3;
+}
+
+// sdk theme overrides
+body {
+  /* default theme overrides */
+  --sz-search-button-clear-background-color: transparent;
+  --sz-search-label-font-size: 1em;
+  --sz-search-label-color: #fce4e4;
+  --sz-search-button-filter-background-color: #666565;
+  --sz-search-button-filter-border-color: #bfbfbf;
+  --sz-search-button-filter-width: 10px;
+  --sz-search-button-filter-height: 10px;
+  --sz-search-button-filter-font-size: 14px;
+  --sz-search-button-filter-margin-left: 2px;
+  
+  &.graph-open {
+    overflow: hidden;
+    height: 100vh;
+  }
+  .sz-graph-node-icon{
+    &.graph-node-tae-primary {
+      fill: red;
+    }
+  }
+ 
+  .biss-graph-tooltip {
+    position: absolute;
+    font-size: 14px;
+    background-color: orange;
+    max-width: var(--sz-graph-tooltip-max-width);
+    height: auto;
+    padding: var(--sz-graph-tooltip-padding);
+    border-radius: var(--sz-graph-tooltip-border-radius);
+    border: var(--sz-graph-tooltip-border);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+    pointer-events: none;
+  }
+}
+
+.graph-context-menu {
+  display: block;
+  background-color: rgb(104, 104, 104);
+  padding: 0;
+  margin: 0;
+  width: 140px;
+  font-size: 12px;
+  border-left: 1px solid #686868;
+  border-right: 1px solid #686868;
+  border-top: 0;
+  border-bottom: 0;
+
+  li {
+    display: block;
+    background-color: #eaeaea;
+    text-align: left;
+    transition-duration: 0.2s;
+    color: rgb(58, 58, 58);
+    margin: 1px 0 1px 0;
+    padding: 4px 2px 2px 4px;
+    border-top: 1px solid #686868;
+    border-bottom: 1px solid #686868;
+  }
+  li:first-child {
+    border-top: 1px solid rgb(104, 104, 104);
+    margin-top: 0;
+  }
+  li:last-child {
+    margin-bottom: 0;
+  }
+  li:hover {
+    cursor: pointer;
+    background-color:rgb(58, 58, 58);
+    color:#c0c0c0;
+  }
+}
+
+button.graph {
+  span.mat-button-wrapper {
+      padding: 0;
+      margin: 0;
+      line-height: auto;
+  }
+  mat-icon {
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "/api/*": {
+    "target": "http://internal-senzing-072-alb-private-745107061.us-east-1.elb.amazonaws.com:8251/api",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/api": ""
+    }
+  },
+  "/pg/*": {
+    "target": "http://localhost:3001",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/pg": ""
+    }
+  },
+  "/elastic/*": {
+    "target": "https://vpc-biss-senzing-elasticsearch-4v75h4wwdsa6tnie5r4k2it7zy.us-east-1.es.amazonaws.com",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/elastic": ""
+    }
+  },
+  "/admin/auth/jwt/*": {
+    "target": "http://localhost:8080/jwt/",
+    "secure": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/admin/auth/jwt": "/admin"
+    }
+  },
+  "/admin/auth/sso/*": {
+    "target": "http://localhost:8080/sso/",
+    "secure": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/admin/auth/sso": "/admin"
+    }
+  },
+  "/auth/jwt/*": {
+    "target": "http://localhost:8080/jwt/",
+    "secure": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/auth/jwt": ""
+    }
+  },
+  "/auth/sso/*": {
+    "target": "http://localhost:8080/sso/",
+    "secure": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/auth/sso": ""
+    }
+  },
+  "/config/auth": {
+    "target": "http://localhost:8080/conf/auth/",
+    "secure": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/config/auth": ""
+    }
+  }
+}

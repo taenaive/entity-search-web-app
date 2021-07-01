@@ -1,0 +1,25 @@
+<div class="list-format">
+  <div class="key">Web App Version: </div>
+  <div class="value">{{ aboutService.appVersion }}</div>
+  <div class="key">API Server Version: </div>
+  <div class="value">{{ aboutService.apiServerVersion }}</div>
+  <div class="key">REST API Version: </div>
+  <div class="value">{{ aboutService.restApiVersion }}</div>
+  <div *ngIf="aboutService.restApiClientVersion" class="key">REST Client: </div>
+  <div *ngIf="aboutService.restApiClientVersion" class="value">{{ aboutService.restApiClientVersion }}</div>
+  <div *ngIf="aboutService.sdkComponentsVersion" class="key">SDK Components: </div>
+  <div *ngIf="aboutService.sdkComponentsVersion" class="value">{{ aboutService.sdkComponentsVersion }}</div>
+  <div *ngIf="aboutService.graphComponentsVersion" class="key">Graph Components: </div>
+  <div *ngIf="aboutService.graphComponentsVersion" class="value">{{ aboutService.graphComponentsVersion }}</div>
+  <hr>
+  <div class="key">Admin Mode:</div>
+  <div class="value" *ngIf="!aboutService.isAdminEnabled">Disabled</div>
+  <div class="value " style="flex-basis: unset; width: 100%;" *ngIf="aboutService.isAdminEnabled">
+    <button mat-button color="warn" class="admin-enabled-link" routerLink="/admin">Admin Enabled</button>
+  </div>
+  <div class="key" style="flex-basis: auto; flex-grow: 2;">NAPI Version: </div>
+  <div class="value" style="flex-basis: unset; width: 100%;">{{ aboutService.nativeApiVersion }}</div>
+  <div class="native-group">NAPI Build # {{ aboutService.nativeApiBuildNumber }}</div>
+  <div class="native-group key-full">NAPI Build Date: </div>
+  <div class="value-full">{{ aboutService.nativeApiBuildDate }}</div>
+</div>

@@ -1,0 +1,311 @@
+<div class="content" *ngIf="true" [ngClass]="_layoutClasses">
+  <section class="entity List">
+    <div class="topbar"></div>
+    <h1>Entity Id: {{entityId}} </h1>
+   <div class="biss-svg-container">
+      <div calss="biss-svg-menu-item">
+        <div class="biss-svg-menu-sub-item-container">
+                <mat-form-field  appearance="fill">
+                
+                  <mat-label>Enter Entity Id</mat-label>
+                  <div class="biss-svg-container">
+                  <input
+                    matInput
+                    placeholder="Enitty Id"
+                    [(ngModel)]="entityId"
+                    name="entity_id_value"
+                  />
+                  <button
+                      mat-button
+                      matSuffixs
+                      mat-icon-button
+                      aria-label="refresh the component"
+                      (click)="sendEntityIdToGraph()"
+                  >
+                  <mat-icon>double_arrow</mat-icon>
+                  </button>
+                  </div>
+                </mat-form-field>
+               
+                <button
+                  mat-button
+                  matSuffix
+                  aria-label="toggle link lables"
+                  (click)="onToggleLinkLables()"
+                >  <mat-icon>label_off</mat-icon> 
+                  show Link Lables: {{showLinkLabels ? "on": "off"}}
+                  </button>
+                  <button
+                  mat-button
+                  matSuffix
+                  aria-label="toggle Arrow"
+                  (click)="onToggleArrow()"
+                  >
+                  <mat-icon>arrow_forward</mat-icon>
+                  Show Arrow: {{showArrow ? "on": "off"}}
+                  </button>
+
+                  <button mat-button
+                  (click)="onZoomSvg(true)">zoom +</button>
+                  <button mat-button
+                  (click)="onZoomSvg(true,1)">{{1/zoomLevel}}</button>
+                  <button mat-button
+                  (click)="onZoomSvg(false)">zoom -</button>
+        </div>
+      </div>
+      <div class="biss-svg-item"  (mouseenter)="mousePanSvg(true)" (mouseleave)="mousePanSvg(false)">
+      <biss-relationship-network 
+      port=2080
+      [entityIds]="entityIdSelected"
+      [showArrow]="showArrow"
+      [showLinkLabels] ="showLinkLabels"
+      [svgViewBox] ="svgViewBox"
+      maxDegrees=3
+      buildOut=2
+      maxEntities=1000>
+      </biss-relationship-network>
+    </div>
+    </div>
+
+    <form #form="ngForm" class="biss-full-width">
+      <h3>Elastic Search :</h3>
+      <div class="form-group">
+        <div class="biss-table-container">
+            <div class ="biss-elastic-item">
+              <mat-form-field appearance="fill">
+                <mat-label>Filter column</mat-label>
+                <mat-select [(ngModel)]="searchColumn1Pre" name="pre_search_key">
+                  <mat-option value="none" (click)="search1valuePre = ''">
+                    No Filter</mat-option
+                  >
+                  <mat-option
+                    *ngFor="let searchLabel of searchLabels"
+                    [value]="searchLabel"
+                    (click)="search1valuePre = ''"
+                  >
+                    {{ searchLabel }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class ="biss-elastic-item">
+                <mat-form-field *ngIf="searchColumn1Pre !== 'none'" >
+                  <mat-label>Type {{ searchColumn1Pre }} string</mat-label>
+                  <input
+                    matInput
+                    placeholder="Search string"
+                    [(ngModel)]="search1valuePre"
+                    name="pre_search_value"
+                    (change)="buildWhereClause()"
+                  />
+                </mat-form-field>
+              </div>
+          
+              <div class ="biss-elastic-item">
+                  <mat-form-field *ngIf="search1valuePre" appearance="fill">
+                    <mat-label>Data Sources</mat-label>
+                    <mat-select [(ngModel)]="dataSource" name="data_source_select" >
+                      <mat-option value="none"  >
+                        All Sources</mat-option
+                      >
+                      <mat-option
+                        *ngFor="let dataSourceItem of dataSources"
+                        [value]="dataSourceItem"
+                        (click)="buildWhereClause()"
+                      >
+                        {{ dataSourceItem }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+              </div>
+         
+               <div>
+                <button
+                    mat-button
+                    *ngIf="search1valuePre"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Apply Pre Filter"
+                    (click)="onClickSelectSearch()"
+                  >
+                    <mat-icon>arrow_circle_down</mat-icon>
+                  </button>
+                </div>
+               
+          </div>
+        </div>
+
+        <mat-form-field appearance="fill" class="biss-full-width">
+          <mat-label>Edit Elastic Query Json</mat-label>
+          <textarea matInput 
+            placeholder="No Query Built Yet..."
+            [(ngModel)]="whereClause"
+            [ngModelOptions]="{standalone: true}"
+            (change)="onJsonChange()">
+          </textarea>
+          <div>
+            <button
+              mat-button
+              matSuffix
+              mat-icon-button
+              aria-label="Apply Pre Filter"
+              (click)="onClickRawSearch()"
+            >
+            <mat-icon>arrow_circle_down</mat-icon>
+          </button>
+          </div>
+
+        </mat-form-field >
+               
+                        <mat-form-field appearance="fill">
+                          <mat-label>Limit</mat-label>
+                          <mat-select [(ngModel)]="limit" name="limit_select" (selectionChange)="onClickSelectSearch()">
+                            <mat-option value="50"  >
+                              50 rows</mat-option>
+                            <mat-option value="100" >
+                              100 rows</mat-option>
+                            <mat-option value="1000" >
+                              1000 rows</mat-option>
+                            <mat-option value="5000" >
+                              5000 rows</mat-option>
+                          </mat-select>
+                        
+                        </mat-form-field>
+                 
+      <h3>Entity Table:</h3>
+      <div class="form-group">
+        <div class="biss-table-container" >
+          <div class="biss-elastic-item">
+            <mat-form-field appearance="fill">
+              <mat-label>Filter column</mat-label>
+              <mat-select [(ngModel)]="searchColumn1" name="search_key">
+                <mat-option value="none" (click)="search1value = ''">
+                  No Filter</mat-option
+                >
+                <mat-option
+                  *ngFor="let searchLabel of searchLabels"
+                  [value]="searchLabel"
+                  (click)="search1value = ''"
+                >
+                  {{ searchLabel }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="biss-elastic-item">
+            <mat-form-field *ngIf="searchColumn1 !== 'none'" >
+              <mat-label>Type {{ searchColumn1 }} string</mat-label>
+              <input
+                matInput
+                placeholder="Search string"
+                [(ngModel)]="search1value"
+                name="search_value"
+                (keyup)="onClickSearchFilterButton()"
+              />
+              <button
+                mat-button
+                *ngIf="search1value"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+              >
+                <mat-icon>filter_alt</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <h3>Total Data Count: {{ totalCount }}</h3>
+   
+      <div class="biss-table-container">
+        <div class="biss-json-pre-container">
+                <table
+                  mat-table
+                  [dataSource]="lists"
+                  matSort
+                  class="mat-elevation-z8"
+                >
+                  <!--- Note that these columns can be defined in any order.
+                            The actual rendered columns are set as a property on the row definition" -->
+                  <ng-container matColumnDef="_id">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header>Entity ID</th>
+                              <td mat-cell *matCellDef="let element">{{ element._id }}</td>
+                  </ng-container>
+                      
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="RECORD_ID">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Record ID</th>
+                    <td mat-cell *matCellDef="let element">{{ element.RECORD_ID }}</td>
+                  </ng-container>
+
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="PRIMARY_NAME_FIRST">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.PRIMARY_NAME_FIRST }} {{ element.PRIMARY_NAME_LAST }}
+                    </td>
+                  </ng-container>
+
+                  <!-- <ng-container matColumnDef="HOME_PHONE_NUMBER">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Number</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.HOME_PHONE_NUMBER }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="HOME_ADDR_LINE1">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Address</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.HOME_ADDR_LINE1 }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="HOME_ADDR_CITY">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
+                    <td mat-cell *matCellDef="let element">{{ element.HOME_ADDR_CITY }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="HOME_ADDR_POSTAL_CODE">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Postal Code</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.HOME_ADDR_POSTAL_CODE }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="HOME_ADDR_STATE">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>State</th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.HOME_ADDR_STATE }}
+                    </td>
+                  </ng-container> -->
+
+                  <ng-container matColumnDef="DATA_SOURCE">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Source</th>
+                    <td mat-cell *matCellDef="let element">{{ element.DATA_SOURCE }}</td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row 
+                  (click)="tableClickedRow.add(row)"
+                  [class.demo-row-is-clicked]="tableClickedRow.has(row)"
+                  *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+          </div>
+          <div class="biss-json-pre-container">
+            <pre><code [highlight]="tableClickedRow.selectedRow | json"  (highlighted)="onHighlight($event)" [lineNumbers]="true" [lang]="javascript"></code></pre>
+          </div>
+  </div>
+  
+    <h3>Selected Records: {{ totalData }}</h3>
+    <!-- <div *ngFor="let list of lists">
+          <h3>{{list.record_id}}</h3>
+          <div *ngFor="let element of list.json_data | keyvalue">
+          <p>{{element.key}} : {{element.value}}</p>
+          </div>  
+        </div> -->
+  </section>
+</div>
